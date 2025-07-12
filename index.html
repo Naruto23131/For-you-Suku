@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Will You become mine?</title>
+  <style>
+    body {
+      /* Lovely gradient background */
+      background: linear-gradient(135deg, #ffe0e6 0%, #ffd6e0 50%, #f7b2b7 100%);
+      /* Removed proposal illustration background-image */
+      font-family: 'Segoe UI', Arial, sans-serif;
+      text-align: center;
+      padding-top: 100px;
+      position: relative;
+      overflow: hidden;
+      min-height: 100vh;
+    }
+    h1 {
+      color: #d72660;
+      font-size: 2.8em;
+      text-shadow: 0 2px 16px #fff, 0 0px 8px #d72660;
+      animation: fadeIn 1s;
+      margin-bottom: 40px;
+      letter-spacing: 2px;
+    }
+    button {
+      font-size: 1.2em;
+      padding: 14px 38px;
+      margin: 20px;
+      border: none;
+      border-radius: 25px;
+      background: linear-gradient(90deg, #d72660 60%, #ffb6b9 100%);
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+      box-shadow: 0 4px 16px rgba(215,38,96,0.15);
+      font-weight: 600;
+      outline: none;
+      position: relative;
+      z-index: 2;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #a91b4a 60%, #ffb6b9 100%);
+      transform: scale(1.1) rotate(-3deg);
+      box-shadow: 0 8px 32px rgba(215,38,96,0.25), 0 0 16px #fff;
+    }
+    #response {
+      font-size: 1.5em;
+      color: #d72660;
+      margin-top: 40px;
+      opacity: 0;
+      transition: opacity 0.7s;
+      text-shadow: 0 2px 8px #fff;
+      min-height: 2em;
+    }
+    #response.show {
+      opacity: 1;
+    }
+    #heart-img {
+      display: none;
+      margin: 30px auto 0;
+      width: 80px;
+      animation: pop 0.7s;
+      filter: drop-shadow(0 0 16px #ffb6b9);
+    }
+    #gift-box {
+      display: none;
+      width: 90px;
+      margin: 30px auto 0;
+      cursor: pointer;
+      animation: pop 0.7s;
+      filter: drop-shadow(0 0 16px #ffb6b9);
+    }
+    #open-gift-btn {
+      display: none;
+      margin-top: 10px;
+      font-size: 1.1em;
+      padding: 10px 28px;
+      border-radius: 18px;
+      border: none;
+      background: #ffb6b9;
+      color: #d72660;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #ffd6e0;
+      transition: background 0.3s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-30px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    @keyframes pop {
+      0% { transform: scale(0.5);}
+      70% { transform: scale(1.2);}
+      100% { transform: scale(1);}
+    }
+    /* Heart animation background */
+    .heart {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      background: url('https://cdn-icons-png.flaticon.com/512/833/833472.png') no-repeat center/contain;
+      opacity: 0.7;
+      animation: floatHeart 6s linear infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+    @keyframes floatHeart {
+      0% { transform: translateY(100vh) scale(0.8) rotate(0deg);}
+      100% { transform: translateY(-10vh) scale(1.2) rotate(360deg);}
+    }
+      /* Glowing border for buttons */
+      button:focus {
+        box-shadow: 0 0 0 4px #ffb6b9, 0 0 16px #d72660;
+      }
+      #followup-heart {
+        box-shadow: 0 0 24px #ffb6b9, 0 0 8px #fff;
+        animation: heartBounce 1.2s infinite;
+      }
+      @keyframes heartBounce {
+        0%, 100% { transform: scale(1);}
+        50% { transform: scale(1.15);}
+      }
+      .mini-heart {
+        filter: drop-shadow(0 0 8px #ffb6b9);
+        will-change: transform, opacity;
+      }
+      #followup-question {
+        opacity: 0;
+        transition: opacity 0.7s;
+      }
+      #followup-question.show {
+        opacity: 1;
+      }
+    </style>
+</head>
+<body>
+  <!-- Heart background container -->
+  <div id="hearts-bg"></div>
+  <!-- Girl's photo -->
+  <img src="https://example.com/girl.jpg" alt="suku" style="width:120px; border-radius:50%; margin-bottom:25px; box-shadow:0 4px 24px #ffd6e0;">
+  <h1>Will you become mine? 💖</h1>
+  <button id="yes-btn" onclick="reply('yes')">Yes</button>
+  <button id="no-btn" onclick="reply('no')">No</button>
+  <div id="response"></div>
+  <div id="followup" style="display:none; margin-top:40px;">
+    <div id="followup-question" style="font-size:1.3em; color:#d72660; margin-bottom:25px;"></div>
+    <div id="followup-heart-container" style="margin-bottom:20px; position:relative;">
+      <img id="followup-heart" src="https://cdn-icons-png.flaticon.com/512/833/833472.png" alt="Heart" style="width:60px; transition:transform 0.3s;">
+    </div>
+    <button id="followup-yes" style="font-size:1.1em; padding:10px 28px; border-radius:18px; border:none; background:#d72660; color:#fff; font-weight:600; cursor:pointer; margin:10px;">Yes</button>
+    <button id="followup-no" style="font-size:1.1em; padding:10px 28px; border-radius:18px; border:none; background:#ffb6b9; color:#d72660; font-weight:600; cursor:pointer; margin:10px;">No</button>
+  </div>
+  <img id="heart-img" src="https://cdn-icons-png.flaticon.com/512/833/833472.png" alt="Heart">
+  <img id="gift-box" src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="Gift Box" style="display:none; width:90px; margin:30px auto 0; cursor:pointer; animation: pop 0.7s; filter: drop-shadow(0 0 16px #ffb6b9);">
+  <button id="open-gift-btn" style="display:none; margin-top:10px; font-size:1.1em; padding:10px 28px; border-radius:18px; border:none; background:#ffb6b9; color:#d72660; font-weight:600; cursor:pointer; box-shadow:0 2px 8px #ffd6e0; transition:background 0.3s;">Press to open</button>
+  <div id="poetry" style="display:none; font-size:1em; color:#a91b4a; margin-top:30px; max-width:500px; margin-left:auto; margin-right:auto; line-height:1.5; text-shadow:0 2px 8px #fff; opacity:0; transition:opacity 1s;">
+    <!-- Poetry will be inserted here -->
+  </div>
+  <script>
+    // Heart background animation
+    function createHearts() {
+      const container = document.getElementById('hearts-bg');
+      for (let i = 0; i < 20; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDelay = (Math.random() * 6) + 's';
+        heart.style.opacity = 0.5 + Math.random() * 0.5;
+        container.appendChild(heart);
+      }
+    }
+    createHearts();
+
+    // Reasons for "No" button
+    const noReasons = [
+      "I'm too shy! 😳",
+      "I need more time to think! ⏳",
+      "Are you sure you want me? 🤔",
+      "My heart says yes, but my mind says wait! 💭",
+      "I can't resist your charm! 😍",
+      "Oops, my finger slipped! 😅",
+      "Try asking again, maybe I'll say yes! 😉",
+      "You're making it hard to say no! 🥺",
+      "I want to, but... butterflies! 🦋",
+      "You deserve a yes! 💖",
+      "I'm just teasing you! 😜",
+      "No, but only because I want you to ask again! 💌"
+    ];
+    let noClickCount = 0;
+
+    // Follow-up questions
+    const followupQuestions = [
+      "So you are ready to give your loyalty to me?",
+      "Are you ready to go young to old with me?",
+      "Will I be the most important person to you?"
+    ];
+    let followupIndex = 0;
+
+    function showFollowupQuestion() {
+      const followup = document.getElementById('followup');
+      const question = document.getElementById('followup-question');
+      const heart = document.getElementById('followup-heart');
+      question.textContent = followupQuestions[followupIndex];
+      followup.style.display = 'block';
+      heart.style.display = 'inline-block';
+      heart.style.transform = 'scale(1)';
+      question.classList.remove('show');
+      setTimeout(() => {
+        question.classList.add('show');
+      }, 100);
+      // Remove any previous mini hearts
+      const prevMini = document.querySelectorAll('.mini-heart');
+      prevMini.forEach(e => e.remove());
+    }
+
+    function showMiniHearts() {
+      const heart = document.getElementById('followup-heart');
+      heart.style.animation = 'none';
+      heart.style.transform = 'scale(1.5)';
+      setTimeout(() => {
+        heart.style.display = 'none';
+      }, 350);
+      const container = document.getElementById('followup-heart-container');
+      for (let i = 0; i < 18; i++) {
+        const mini = document.createElement('img');
+        mini.src = "https://cdn-icons-png.flaticon.com/512/833/833472.png";
+        mini.className = 'mini-heart';
+        mini.style.position = 'absolute';
+        mini.style.width = '22px';
+        mini.style.left = '50%';
+        mini.style.top = '30px';
+        mini.style.transform = 'translate(-50%, -50%)';
+        mini.style.pointerEvents = 'none';
+        mini.style.opacity = '0.9';
+        mini.style.zIndex = '10';
+        // Animate each heart in a random direction, with rotation
+        const angle = Math.random() * 2 * Math.PI;
+        const dist = 70 + Math.random() * 70;
+        const x = Math.cos(angle) * dist;
+        const y = Math.sin(angle) * dist;
+        const rot = Math.random() * 360;
+        mini.animate([
+          { transform: `translate(-50%, -50%) scale(1) rotate(0deg)`, opacity: 0.9 },
+          { transform: `translate(${x}px, ${y}px) scale(0.7) rotate(${rot}deg)`, opacity: 0 }
+        ], {
+          duration: 1100 + Math.random() * 400,
+          easing: 'cubic-bezier(.42,1.5,.58,1)',
+          fill: 'forwards'
+        });
+        setTimeout(() => { mini.remove(); }, 1500);
+        container.appendChild(mini);
+      }
+    }
+
+    function hideFollowup() {
+      document.getElementById('followup').style.display = 'none';
+    }
+
+    function reply(answer) {
+      const response = document.getElementById('response');
+      const heartImg = document.getElementById('heart-img');
+      const noBtn = document.getElementById('no-btn');
+      const yesBtn = document.getElementById('yes-btn');
+      const poetry = document.getElementById('poetry');
+      const giftBox = document.getElementById('gift-box');
+      const openGiftBtn = document.getElementById('open-gift-btn');
+      const followup = document.getElementById('followup');
+      response.classList.remove('show');
+      heartImg.style.display = 'none';
+      poetry.style.display = 'none';
+      poetry.style.opacity = 0;
+      giftBox.style.display = 'none';
+      openGiftBtn.style.display = 'none';
+      followup.style.display = 'none';
+      followupIndex = 0;
+
+      if (answer === 'no') {
+        // Move "No" button to a random position
+        const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40);
+        const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 120) + 80;
+        noBtn.style.position = 'absolute';
+        noBtn.style.left = x + 'px';
+        noBtn.style.top = y + 'px';
+        // Show a new reason
+        response.textContent = noReasons[noClickCount % noReasons.length];
+        noClickCount++;
+      } else {
+        // Reset "No" button position
+        noBtn.style.position = 'static';
+        noBtn.style.left = '';
+        noBtn.style.top = '';
+        response.textContent = "Yay! You made my day! 😊";
+        heartImg.style.display = 'block';
+        // Hide main buttons
+        yesBtn.style.display = 'none';
+        noBtn.style.display = 'none';
+        // Show first follow-up question
+        setTimeout(() => {
+          showFollowupQuestion();
+        }, 400);
+      }
+      setTimeout(() => {
+        response.classList.add('show');
+      }, 200);
+    }
+
+    // Handle follow-up Yes/No
+    document.getElementById('followup-yes').onclick = function() {
+      showMiniHearts();
+      setTimeout(() => {
+        const heart = document.getElementById('followup-heart');
+        heart.style.display = 'inline-block';
+        heart.style.transform = 'scale(1)';
+        heart.style.animation = 'heartBounce 1.2s infinite';
+        followupIndex++;
+        if (followupIndex < followupQuestions.length) {
+          showFollowupQuestion();
+        } else {
+          hideFollowup();
+          document.getElementById('gift-box').style.display = 'block';
+          document.getElementById('open-gift-btn').style.display = 'inline-block';
+        }
+      }, 600);
+    };
+    document.getElementById('followup-no').onclick = function() {
+      hideFollowup();
+      document.getElementById('response').textContent = "Maybe I am not meant for you. 💔";
+    };
+
+    // Show Hindi poetry when "Press to open" is clicked
+    document.getElementById('open-gift-btn').onclick = function() {
+      const poetry = document.getElementById('poetry');
+      document.getElementById('gift-box').style.display = 'none';
+      this.style.display = 'none';
+      poetry.innerHTML = `
+        <span style="font-size:1.0em;">🎁💖</span><br>
+        Tere bina adhura lagta hai har ek pal,<br>
+        Mujhse jud jaa jaise chanda se chandni ka rishta atal.<br>
+        Aaj kehna chahta hoon dil ki ek baat,<br>
+        Meri zindagi ho tum, meri har ek mulaqat.<br>
+        Mohabbat hai tumse bepanah, yeh dil maanta hai,<br>
+        Bas ek baar haan keh do, yeh jahan roshan ho jaata hai.<br>
+        Main chahta hoon tere saath har ek subah, har ek shaam,<br>
+        Kya tu de sakti hai mujhe apni zindagi ka pyaara inaam?<br>
+        Dil karta hai tujhe apni har saans mein basa loon,<br>
+        Ek pal bhi juda na hoon, tujhko apna bana loon.
+      `;
+      poetry.style.display = 'block';
+      setTimeout(() => {
+        poetry.style.opacity = 1;
+      }, 300);
+    };
+  </script>
+</body>
+</html>
